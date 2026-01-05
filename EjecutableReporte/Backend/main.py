@@ -26,7 +26,11 @@ from splash import show_splash
 
 def server_is_running():
     try:
-        r = requests.get("http://127.0.0.1:8000/", timeout=0.5)
+        r = requests.get(
+            "http://127.0.0.1:8000/", 
+            timeout=0.5, 
+            headers={"Cache-Control": "no-cache"}
+        )
         return r.status_code == 200
     except:
         return False
@@ -53,9 +57,7 @@ if __name__ == "__main__":
     # 🔑 CLAVE: NO intentar levantar dos veces
     if server_is_running():
         webbrowser.open("http://127.0.0.1:8000")
-        sys.exit(0)
-
-    threading.Thread(target=show_splash, daemon=True).start()
-    threading.Thread(target=open_browser, daemon=True).start()
-
-    start_server()
+    else:    
+        threading.Thread(target=show_splash, daemon=True).start()
+        threading.Thread(target=open_browser, daemon=True).start()
+        start_server()
