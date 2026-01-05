@@ -43,7 +43,7 @@ async def export_campaigns(
         all_rows = []
         
         for result in results:
-            if isinstance(result, Exception):
+            if isinstance(result, BaseException):
                 print(f"⚠️ Campaña fallida: {result}")
                 continue
             

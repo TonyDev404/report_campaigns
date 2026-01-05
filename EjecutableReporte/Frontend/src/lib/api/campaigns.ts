@@ -1,11 +1,9 @@
-const API_BASE = 'http://localhost:8000';
-
 export async function downloadReport(
     brand: string,
     channel: string
 ) {
     const response = await fetch(
-        `${API_BASE}/campaigns/export?brand=${brand}&channel=${channel}`,
+        `/campaigns/export?brand=${brand}&channel=${channel}`,
         {method: 'GET'}
     );
 

@@ -3,6 +3,7 @@ import httpx
 
 from typing import Any, Dict, List
 from services.base import CampaignService
+from requests.exceptions import HTTPError
 
 class HttpCampaignService(CampaignService):
     def __init__(self, url: str, token: str):
@@ -28,12 +29,17 @@ class HttpCampaignService(CampaignService):
             "columns": ["Name"],
         }
         
-        response = requests.post(self.url, headers=self._headers(), json=payload)
+        response = requests.post(
+            self.url, 
+            headers=self._headers(), 
+            json=payload,
+            timeout=30
+        )
         
-        try:
-            response.raise_for_status()
-        except httpx.HTTPStatusError as e:
-            return {}
+        if not response.ok:
+            raise RuntimeError(
+                f"InConcert error {response.status_code}: {response.text}"
+            )
         
         data = response.json()
         return [row["Name"] for row in data.get("rows", [])]
